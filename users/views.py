@@ -1,9 +1,9 @@
 from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.exceptions import AuthenticationFailed
 
 from .models import User
 from .serializers import (
@@ -68,10 +68,12 @@ class LoginView(TokenObtainPairView):
             return response
             
         except AuthenticationFailed as e:
-            # Handle authentication failures
+            # Invalid credentials are expected user-facing errors, not server errors.
             return Response({
                 'detail': str(e.detail) if hasattr(e, 'detail') else 'Invalid email or password.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+        except ValidationError as e:
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             # Handle any other exceptions
             return Response({
