@@ -11,11 +11,12 @@ class AgencyPublicSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'phone_number',  # ✅ Now exists in model
-            'email',         # ✅ Now exists in model
-            'address',       # ✅ Now exists in model
+            'phone_number',
+            'email',
+            'address',
             'status',
-            'logo_url'       # ✅ Now exists as property
+            'logo_url',
+            'invoice_template',
         ]
         read_only_fields = ['id', 'status']
 
@@ -32,12 +33,13 @@ class AgencySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'phone_number',  # ✅ Now exists
-            'email',         # ✅ Now exists
-            'address',       # ✅ Now exists
+            'phone_number',
+            'email',
+            'address',
             'status',
-            'logo_url',      # ✅ Now exists as property
-            'description',   # ✅ Now exists
+            'logo_url',
+            'description',
+            'invoice_template',
             'user_count',
             'booking_count',
             'created_at',
@@ -64,5 +66,6 @@ class AgencyUpdateSerializer(serializers.ModelSerializer):
             'email',
             'address',
             'logo',
-            'description'
+            'description',
+            'invoice_template',
         ]

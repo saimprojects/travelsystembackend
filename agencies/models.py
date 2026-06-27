@@ -31,6 +31,19 @@ class Agency(models.Model):
     email = models.EmailField(max_length=255, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+
+    TEMPLATE_CHOICES = [
+        ('classic', 'Classic Blue'),
+        ('gold_voucher', 'Gold Voucher'),
+        ('dark_pro', 'Dark Professional'),
+        ('minimal', 'Modern Minimal'),
+        ('corporate', 'Corporate'),
+    ]
+    invoice_template = models.CharField(
+        max_length=20,
+        choices=TEMPLATE_CHOICES,
+        default='classic'
+    )
     
     class Meta:
         verbose_name = 'Agency'
