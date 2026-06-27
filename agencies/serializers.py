@@ -17,6 +17,7 @@ class AgencyPublicSerializer(serializers.ModelSerializer):
             'status',
             'logo_url',
             'invoice_template',
+            'advanced_features_enabled',
         ]
         read_only_fields = ['id', 'status']
 
@@ -40,12 +41,13 @@ class AgencySerializer(serializers.ModelSerializer):
             'logo_url',
             'description',
             'invoice_template',
+            'advanced_features_enabled',
             'user_count',
             'booking_count',
             'created_at',
             'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user_count', 'booking_count']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user_count', 'booking_count', 'advanced_features_enabled']
     
     def get_user_count(self, obj):
         return obj.users.count()

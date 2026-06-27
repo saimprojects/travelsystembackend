@@ -181,6 +181,8 @@ class BookingSerializer(serializers.ModelSerializer):
             'paid_amount', 'total_amount', 'remaining_amount',
             'payment_status', 'payment_status_display', 'payment_method', 'last_payment_date',
             'departure_date', 'arrival_date', 'notes',
+            'visa_status', 'visa_expiry_date', 'visa_notes',
+            'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
             'created_by', 'created_by_name', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'agency', 'created_by', 'payment_status', 'created_at', 'updated_at']
@@ -192,7 +194,9 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         fields = [
             'client', 'service', 'discount', 'booking_status',
             'paid_amount', 'payment_method', 'last_payment_date',
-            'departure_date', 'arrival_date'
+            'departure_date', 'arrival_date',
+            'visa_status', 'visa_expiry_date', 'visa_notes',
+            'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
         ]
 
     def validate(self, data):
@@ -237,7 +241,9 @@ class BookingUpdateSerializer(serializers.ModelSerializer):
         model = Booking
         fields = [
             'discount', 'booking_status', 'paid_amount', 'payment_method',
-            'last_payment_date', 'departure_date', 'arrival_date'
+            'last_payment_date', 'departure_date', 'arrival_date',
+            'visa_status', 'visa_expiry_date', 'visa_notes',
+            'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
         ]
 
     def validate(self, data):
@@ -294,6 +300,9 @@ class BookingAgentSerializer(serializers.ModelSerializer):
             'discount', 'booking_status', 'booking_status_display',
             'paid_amount', 'total_amount', 'remaining_amount',
             'payment_status', 'payment_status_display', 'payment_method', 'last_payment_date',
-            'departure_date', 'arrival_date', 'created_at', 'updated_at'
+            'departure_date', 'arrival_date',
+            'visa_status', 'visa_expiry_date', 'visa_notes',
+            'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'payment_status', 'created_at', 'updated_at']

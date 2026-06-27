@@ -224,6 +224,51 @@ class Booking(models.Model):
     departure_date = models.DateField(blank=True, null=True)  # Travel date - when client leaves
     arrival_date = models.DateField(blank=True, null=True)    # Return date - when client comes back
 
+    # ── Visa fields (only active when agency has advanced_features_enabled) ──
+    VISA_STATUS_CHOICES = [
+        ('not_applied', 'Not Applied'),
+        ('applied', 'Applied'),
+        ('in_review', 'In Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    visa_status = models.CharField(
+        max_length=20,
+        choices=VISA_STATUS_CHOICES,
+        default='not_applied',
+        blank=True
+    )
+    visa_expiry_date = models.DateField(blank=True, null=True)
+    visa_notes = models.TextField(blank=True, null=True)
+
+    # ── Ticket fields (only active when agency has advanced_features_enabled) ──
+    TICKET_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('issued', 'Issued'),
+        ('cancelled', 'Cancelled'),
+    ]
+    TICKET_CLASS_CHOICES = [
+        ('economy', 'Economy'),
+        ('business', 'Business'),
+        ('first', 'First Class'),
+    ]
+    pnr_number = models.CharField(max_length=20, blank=True, null=True)
+    airline = models.CharField(max_length=100, blank=True, null=True)
+    flight_from = models.CharField(max_length=10, blank=True, null=True)
+    flight_to = models.CharField(max_length=10, blank=True, null=True)
+    ticket_status = models.CharField(
+        max_length=20,
+        choices=TICKET_STATUS_CHOICES,
+        default='pending',
+        blank=True
+    )
+    ticket_class = models.CharField(
+        max_length=20,
+        choices=TICKET_CLASS_CHOICES,
+        default='economy',
+        blank=True
+    )
+
     created_by = models.ForeignKey(
         'users.User',
         on_delete=models.SET_NULL,

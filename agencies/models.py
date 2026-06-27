@@ -44,7 +44,11 @@ class Agency(models.Model):
         choices=TEMPLATE_CHOICES,
         default='classic'
     )
-    
+    advanced_features_enabled = models.BooleanField(
+        default=False,
+        help_text='Enable advanced features (Visa & Ticket management) for this agency'
+    )
+
     class Meta:
         verbose_name = 'Agency'
         verbose_name_plural = 'Agencies'
