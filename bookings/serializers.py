@@ -188,7 +188,33 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'agency', 'created_by', 'payment_status', 'created_at', 'updated_at']
 
 
-class BookingCreateSerializer(serializers.ModelSerializer):
+# Optional fields where an empty string from the frontend should mean "not provided"
+OPTIONAL_NULLABLE_FIELDS = [
+    'payment_method', 'last_payment_date', 'departure_date', 'arrival_date',
+    'visa_expiry_date', 'visa_notes',
+    'pnr_number', 'airline', 'flight_from', 'flight_to',
+]
+
+
+class EmptyStringToNullMixin:
+    """Convert '' to None for optional fields so DRF doesn't 400 on empty dates/chars."""
+    def to_internal_value(self, data):
+        if hasattr(data, 'copy'):
+            data = data.copy()
+        for field in OPTIONAL_NULLABLE_FIELDS:
+            if data.get(field, None) == '':
+                data[field] = None
+        # Optional choice fields: '' -> model default
+        if data.get('visa_status', None) == '':
+            data['visa_status'] = 'not_applied'
+        if data.get('ticket_status', None) == '':
+            data['ticket_status'] = 'pending'
+        if data.get('ticket_class', None) == '':
+            data['ticket_class'] = 'economy'
+        return super().to_internal_value(data)
+
+
+class BookingCreateSerializer(EmptyStringToNullMixin, serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = [
@@ -198,6 +224,17 @@ class BookingCreateSerializer(serializers.ModelSerializer):
             'visa_status', 'visa_expiry_date', 'visa_notes',
             'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
         ]
+        extra_kwargs = {
+            'visa_status': {'required': False},
+            'visa_expiry_date': {'required': False, 'allow_null': True},
+            'visa_notes': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'pnr_number': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'airline': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'flight_from': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'flight_to': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'ticket_status': {'required': False},
+            'ticket_class': {'required': False},
+        }
 
     def validate(self, data):
         """Validate discount rules + travel date logic"""
@@ -236,7 +273,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         return data
 
 
-class BookingUpdateSerializer(serializers.ModelSerializer):
+class BookingUpdateSerializer(EmptyStringToNullMixin, serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = [
@@ -245,6 +282,17 @@ class BookingUpdateSerializer(serializers.ModelSerializer):
             'visa_status', 'visa_expiry_date', 'visa_notes',
             'pnr_number', 'airline', 'flight_from', 'flight_to', 'ticket_status', 'ticket_class',
         ]
+        extra_kwargs = {
+            'visa_status': {'required': False},
+            'visa_expiry_date': {'required': False, 'allow_null': True},
+            'visa_notes': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'pnr_number': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'airline': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'flight_from': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'flight_to': {'required': False, 'allow_null': True, 'allow_blank': True},
+            'ticket_status': {'required': False},
+            'ticket_class': {'required': False},
+        }
 
     def validate(self, data):
         """Validate discount rules on update + travel date logic"""
